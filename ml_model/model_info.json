@@ -1,0 +1,26 @@
+{
+    "best_model": "Random Forest",
+    "f1_score": 0.9395604395604396,
+    "accuracy": 0.9804618117229129,
+    "features": [
+        "Tenure",
+        "PreferredLoginDevice",
+        "CityTier",
+        "WarehouseToHome",
+        "PreferredPaymentMode",
+        "Gender",
+        "HourSpendOnApp",
+        "NumberOfDeviceRegistered",
+        "PreferedOrderCat",
+        "SatisfactionScore",
+        "MaritalStatus",
+        "NumberOfAddress",
+        "Complain",
+        "OrderAmountHikeFromlastYear",
+        "CouponUsed",
+        "OrderCount",
+        "DaySinceLastOrder",
+        "CashbackAmount"
+    ],
+    "num_features": 18
+}

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+<p class="text-muted mb-4">Welcome back, {{ user.username }}! Here's your store's churn analytics.</p>
+
+<!-- Stats Cards - Fixed Grid -->
+<div class="stats-grid">
+    <div class="stats-card primary">
+        <div class="icon"><i class="fas fa-users"></i></div>
+        <h3>{{ total|default:"0" }}</h3>
+        <p>Total Customers</p>
+    </div>
+    <div class="stats-card danger">
+        <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
+        <h3>{{ high|default:"0" }}</h3>
+        <p>High Risk</p>
+    </div>
+    <div class="stats-card warning">
+        <div class="icon"><i class="fas fa-chart-line"></i></div>
+        <h3>{{ medium|default:"0" }}</h3>
+        <p>Medium Risk</p>
+    </div>
+    <div class="stats-card success">
+        <div class="icon"><i class="fas fa-smile"></i></div>
+        <h3>{{ low|default:"0" }}</h3>
+        <p>Low Risk</p>
+    </div>
+</div>
+
+<!-- Two Column Layout for Chart and Summary -->
+<div class="two-columns">
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="fas fa-chart-bar"></i> Risk Distribution</h4>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="riskChart"></canvas>
+            </div>
+            <div id="dashboard-data" data-high="{{ high|default:'0' }}" data-medium="{{ medium|default:'0' }}" data-low="{{ low|default:'0' }}" data-pending="{{ pending|default:'0' }}" hidden></div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="fas fa-envelope"></i> Retention Summary</h4>
+        </div>
+        <div class="card-body text-center">
+            <h2>{{ emails_sent|default:"0" }}</h2>
+            <p class="text-muted">Total Emails Sent</p>
+            <hr>
+            <p>High Risk Customers: <strong>{{ high_percent|default:"0" }}%</strong> of total</p>
+            <a href="{% url 'predictions:run_bulk' %}" class="btn btn-primary mt-3">
+                <i class="fas fa-play"></i> Run New Prediction
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Customers Table -->
+<div class="card">
+    <div class="card-header">
+        <h4><i class="fas fa-clock"></i> Recent Customers</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Orders</th>
+                        <th>Risk Level</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in recent_customers %}
+                    <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.email }}</td>
+                        <td>{{ customer.total_orders }}</td>
+                        <td>
+                            {% if customer.risk_level == 'High' %}
+                                <span class="badge badge-danger">High {{ customer.churn_probability|floatformat:0 }}%</span>
+                            {% elif customer.risk_level == 'Medium' %}
+                                <span class="badge badge-warning">Medium {{ customer.churn_probability|floatformat:0 }}%</span>
+                            {% elif customer.risk_level == 'Low' %}
+                                <span class="badge badge-success">Low {{ customer.churn_probability|floatformat:0 }}%</span>
+                            {% else %}
+                                <span class="badge badge-secondary">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'customers:customer_detail' customer.id %}" class="btn btn-sm btn-info">View</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No customers yet. <a href="{% url 'customers:add_customer' %}">Add your first customer</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvas = document.getElementById('riskChart');
+        const dataEl = document.getElementById('dashboard-data');
+        if (canvas && dataEl) {
+            const chartData = [
+                Number(dataEl.dataset.high),
+                Number(dataEl.dataset.medium),
+                Number(dataEl.dataset.low),
+                Number(dataEl.dataset.pending)
+            ];
+
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: ['High Risk', 'Medium Risk', 'Low Risk', 'Pending'],
+                    datasets: [{
+                        label: 'Number of Customers',
+                        data: chartData,
+                        backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#94a3b8'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

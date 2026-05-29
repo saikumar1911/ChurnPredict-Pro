@@ -1,0 +1,28 @@
+
+====================================================================
+        CUSTOMER CHURN PREDICTION - TRAINING REPORT
+====================================================================
+
+📊 DATASET INFORMATION:
+- Total samples: 5630
+- Features used: 18
+- Churn rate: 16.84%
+- Train/Test split: 80/20
+
+🎯 MODEL PERFORMANCE:
+- Best Model: Random Forest
+- Test Accuracy: 98.05%
+- F1-Score: 0.9396
+- Precision: 0.9828
+- Recall: 0.9000
+
+📁 FILES GENERATED:
+1. churn_model.pkl - Trained ML model
+2. scaler.pkl - Feature scaler
+3. feature_columns.json - List of features
+4. label_encoders.pkl - Categorical encoders
+5. model_info.json - Model metadata
+
+====================================================================
+✅ TRAINING COMPLETE! Ready for Django integration.
+====================================================================

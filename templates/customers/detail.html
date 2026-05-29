@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row customer-detail-row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4><i class="fas fa-user-circle"></i> Customer Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-user"></i> Name:</strong> {{ customer.name }}</p>
+                        <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ customer.email }}</p>
+                        <p><strong><i class="fas fa-phone"></i> Phone:</strong> {{ customer.phone|default:"Not provided" }}</p>
+                        <p><strong><i class="fas fa-calendar"></i> Customer Since:</strong> {{ customer.created_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="fas fa-shopping-cart"></i> Total Orders:</strong> {{ customer.total_orders }}</p>
+                        <p><strong><i class="fas fa-rupee-sign"></i> Total Spent:</strong> ₹{{ customer.total_spent|floatformat:2 }}</p>
+                        <p><strong><i class="fas fa-clock"></i> Days Since Last Order:</strong> {{ customer.days_since_last_order }}</p>
+                        <p><strong><i class="fas fa-exclamation-triangle"></i> Complaints:</strong> {{ customer.complaint_count }}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="text-center p-3 rounded {% if customer.risk_level == 'High' %}risk-high{% elif customer.risk_level == 'Medium' %}risk-medium{% elif customer.risk_level == 'Low' %}risk-low{% endif %}">
+                    <h4>Churn Prediction Result</h4>
+                    {% if customer.risk_level %}
+                        <h2>{{ customer.risk_level }} Risk</h2>
+                        <h5>{{ customer.churn_probability|floatformat:1 }}% Chance of Churning</h5>
+                        {% if customer.risk_level == 'High' %}
+                            <p class="text-danger">⚠️ This customer is likely to leave. Send a retention email immediately!</p>
+                        {% elif customer.risk_level == 'Medium' %}
+                            <p class="text-warning">⚠️ This customer shows warning signs. Consider a follow-up.</p>
+                        {% else %}
+                            <p class="text-success">✅ This customer is likely to stay. Continue regular engagement.</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">No prediction yet. Click "Predict Churn" to analyze this customer.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-cogs"></i> Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="action-buttons-vertical">
+                    <a href="{% url 'customers:edit_customer' customer.id %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit Customer
+                    </a>
+                    <a href="{% url 'predictions:predict_single' customer.id %}" class="btn btn-info">
+                        <i class="fas fa-brain"></i> Predict Churn
+                    </a>
+                    <a href="{% url 'emails:send_email' customer.id %}" class="btn btn-primary">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                    <a href="{% url 'customers:delete_customer' customer.id %}" class="btn btn-danger" onclick="return confirm('Delete this customer?')">
+                        <i class="fas fa-trash"></i> Delete Customer
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% if customer.coupon_used > 0 %}
+        <div class="card mt-3">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-ticket-alt"></i> Coupon History</h5>
+            </div>
+            <div class="card-body">
+                <p>Coupons Used: {{ customer.coupon_used }}</p>
+                <p>Cashback Received: ₹{{ customer.cashback_amount|floatformat:2 }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

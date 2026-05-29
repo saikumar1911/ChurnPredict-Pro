@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2><i class="fas fa-envelope-open-text"></i> Email History</h2>
+<p class="text-muted">Track all retention emails sent to customers.</p>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5>Sent Emails ({{ total }})</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr><th>Date</th><th>Customer</th><th>Subject</th><th>Coupon</th><th>Discount</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for email in emails %}
+                <tr>
+                    <td>{{ email.sent_at|date:"Y-m-d H:i" }}</a></td>
+                    <td><a href="{% url 'customers:customer_detail' email.customer.id %}">{{ email.customer.name }}</a></td>
+                    <td>{{ email.subject|truncatechars:50 }}</a></td>
+                    <td><code>{{ email.coupon_code }}</code></td>
+                    <td><span class="badge bg-primary">{{ email.discount_percent }}%</span></td>
+                    <td><span class="badge {% if email.status == 'sent' %}bg-success{% else %}bg-secondary{% endif %}">{{ email.status }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center">No emails sent yet. Send your first retention email!</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

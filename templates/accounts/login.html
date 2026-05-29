@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 0;">
+    <div style="width: 100%; max-width: 900px;">
+        <div style="display: flex; flex-wrap: wrap; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden;">
+            
+            <!-- LEFT SIDE: Project Info -->
+            <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, #4f46e5, #8b5cf6); padding: 40px 30px; color: white; display: flex; flex-direction: column; justify-content: space-between;">
+                
+                <div style="text-align: center;">
+                    <i class="fas fa-chart-line" style="font-size: 55px;"></i>
+                    <h2 style="margin: 15px 0 5px;">ChurnPredict Pro</h2>
+                    <p style="margin: 0; opacity: 0.9; font-size: 13px;">AI Customer Churn Prediction</p>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <p style="font-size: 14px; margin: 0 0 15px 0; opacity: 0.95;">Protect your business from customer loss</p>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-brain" style="font-size: 16px;"></i>
+                            </div>
+                            <div>
+                                <strong>AI Predictions</strong>
+                                <p style="margin: 3px 0 0; font-size: 12px; opacity: 0.85;">Random Forest ML model</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-envelope" style="font-size: 16px;"></i>
+                            </div>
+                            <div>
+                                <strong>Smart Retention</strong>
+                                <p style="margin: 3px 0 0; font-size: 12px; opacity: 0.85;">Auto discount coupons</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-chart-simple" style="font-size: 16px;"></i>
+                            </div>
+                            <div>
+                                <strong>Live Dashboard</strong>
+                                <p style="margin: 3px 0 0; font-size: 12px; opacity: 0.85;">Real-time risk insights</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 16px;"></i>
+                            </div>
+                            <div>
+                                <strong>Bulk Upload</strong>
+                                <p style="margin: 3px 0 0; font-size: 12px; opacity: 0.85;">CSV/Excel support</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.2);">
+                    <p style="font-size: 11px; margin: 0; opacity: 0.8;">
+                        <i class="fas fa-shield-alt"></i> Secure & Free
+                    </p>
+                </div>
+            </div>
+            
+            <!-- RIGHT SIDE: Login Form -->
+            <div style="flex: 1; min-width: 280px; padding: 40px 35px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <i class="fas fa-store" style="font-size: 40px; color: #4f46e5;"></i>
+                    <h3 style="margin: 10px 0 5px;">Store Manager Login</h3>
+                    <p style="color: #666; font-size: 13px;">Access your dashboard</p>
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <div style="margin-bottom: 15px;">
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
+                                {{ form.username.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
+                                {{ form.password.errors|striptags }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; font-weight: 600;">
+                        Login
+                    </button>
+                </form>
+                
+                <hr style="margin: 25px 0 20px;">
+                
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 10px; color: #666; font-size: 14px;">New here?</p>
+                    <a href="{% url 'register' %}" style="display: inline-block; padding: 10px 25px; background: #10b981; color: white; text-decoration: none; border-radius: 10px;">
+                        Create Account
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

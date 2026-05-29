@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChurnPredict Pro | Customer Churn Prediction System</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard/">
+                <i class="fas fa-chart-line"></i> ChurnPredict Pro
+            </a>
+            <div class="nav-links">
+                <span class="user-name"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
+                <a href="/dashboard/"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="/customers/"><i class="fas fa-users"></i> Customers</a>
+                <a href="/customers/upload/"><i class="fas fa-cloud-upload-alt"></i> Upload CSV</a>
+                <a href="/predictions/run/"><i class="fas fa-brain"></i> Run Prediction</a>
+                <a href="/emails/"><i class="fas fa-envelope"></i> Email Log</a>
+                <a href="/logout/" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+    
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span><i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i> {{ message }}</span>
+                    <button class="close-alert" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+    
+    <div class="footer">
+        <p><i class="fas fa-chart-line"></i> ChurnPredict Pro | Customer Churn Prediction System | Powered by Random Forest ML</p>
+    </div>
+    
+    <script>
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                alert.style.opacity = '0';
+                setTimeout(function() { alert.style.display = 'none'; }, 300);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

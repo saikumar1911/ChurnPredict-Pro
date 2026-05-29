@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="fas fa-paper-plane"></i> Send Retention Email</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label><i class="fas fa-user"></i> To:</label>
+                        <input type="email" class="form-control" value="{{ customer.email }}" readonly>
+                        <small class="text-muted">{{ customer.name }}</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label><i class="fas fa-tag"></i> Subject:</label>
+                        <input type="text" name="subject" class="form-control" value="Special Discount Just for You! 🎁" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label><i class="fas fa-comment"></i> Message:</label>
+                        <textarea name="message" class="form-control" rows="6" required>Dear {{ customer.name }},
+
+We noticed you haven't shopped with us lately. As a valued customer, we'd like to offer you a special discount on your next purchase!
+
+Use the coupon code below at checkout.
+
+Best regards,
+Your Store Team</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label>Discount Percentage:</label>
+                        <input type="number" name="discount" class="form-control" value="{{ default_discount }}" min="5" max="50" required>
+                        <small class="text-muted">Recommended: 25% for High Risk, 15% for Medium Risk, 10% for Low Risk</small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 
+                        A unique coupon code will be auto-generated when you send this email.
+                    </div>
+                    
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send Email</button>
+                        <a href="{% url 'customers:customer_detail' customer.id %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

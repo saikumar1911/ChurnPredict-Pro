@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div style="width: 100%; max-width: 700px;">
+        <div style="background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #64748b, #475569); color: white; padding: 20px 25px;">
+                <h3 style="margin: 0;"><i class="fas fa-upload"></i> Bulk Customer Upload</h3>
+                <p style="margin: 5px 0 0; opacity: 0.9;">Upload CSV file to add multiple customers at once</p>
+            </div>
+            <div style="padding: 30px;">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'customers:upload_csv' %}">
+                    {% csrf_token %}
+                    
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">
+                            <i class="fas fa-file-csv"></i> Select CSV File
+                        </label>
+                        <input type="file" name="csv_file" class="form-control" accept=".csv" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+                        <small style="color: #666; display: block; margin-top: 5px;">File must be CSV format (.csv)</small>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button type="submit" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4f46e5, #8b5cf6); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">
+                            <i class="fas fa-upload"></i> Upload & Import
+                        </button>
+                        <a href="{% url 'customers:customer_list' %}" style="flex: 1; padding: 12px; background: #6c757d; color: white; text-align: center; text-decoration: none; border-radius: 8px; display: inline-block;">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+                
+                <hr style="margin: 30px 0;">
+                
+                <h5 style="margin-bottom: 15px;"><i class="fas fa-question-circle"></i> CSV Format Example</h5>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; overflow-x: auto;">
+                    <pre style="margin: 0; font-size: 12px; font-family: monospace;">name,email,phone,tenure,total_orders,total_spent,days_since_last_order,complaint_count,city_tier
+Rajesh Kumar,rajesh@email.com,9876543210,24,25,325000,5,0,1
+Priya Sharma,priya@email.com,9876543211,8,8,85000,12,1,2
+Amit Patel,amit@email.com,9876543212,3,2,25000,48,2,3</pre>
+                </div>
+                
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #2196f3;">
+                    <i class="fas fa-info-circle" style="color: #1976d2;"></i>
+                    <strong style="margin-left: 5px;">Tip:</strong>
+                    <ul style="margin: 10px 0 0 20px; color: #555;">
+                        <li>Required fields: <strong>name</strong> and <strong>email</strong></li>
+                        <li>All other fields are optional (will default to 0)</li>
+                        <li>Save your file as CSV UTF-8 format</li>
+                        <li>Maximum file size: 10MB</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+# Django
+*.pyc
+__pycache__/
+db.sqlite3
+*.log
+
+# Virtual environment
+venv/
+
+# Migrations
+*/migrations/

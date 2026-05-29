@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+env/
+.env
+
+# Django
+*.log
+db.sqlite3
+*.pyc
+migrations/
+*.sqlite3
+
+# ML Models (Optional - if too large)
+# ml_model/*.pkl
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Static files
+staticfiles/
+media/
+
+# Secret keys
+*.env
+config.py

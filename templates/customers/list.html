@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2><i class="fas fa-users"></i> Customers</h2>
+    <div>
+        <a href="{% url 'customers:add_customer' %}" class="btn btn-primary">+ Add Customer</a>
+        <a href="{% url 'customers:upload_csv' %}" class="btn btn-secondary">Upload CSV</a>
+        <a href="{% url 'predictions:run_bulk' %}" class="btn btn-info">Run Prediction</a>
+    </div>
+</div>
+
+<!-- Statistics Row -->
+<div style="display: flex; gap: 15px; margin-bottom: 25px;">
+    <div style="flex: 1; background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+        <h3>{{ total|default:"0" }}</h3>
+        <p style="margin:0">Total Customers</p>
+    </div>
+    <div style="flex: 1; background: #ffebee; padding: 15px; border-radius: 8px; text-align: center;">
+        <h3>{{ high_risk|default:"0" }}</h3>
+        <p style="margin:0">High Risk</p>
+    </div>
+    <div style="flex: 1; background: #fff3e0; padding: 15px; border-radius: 8px; text-align: center;">
+        <h3>{{ medium_risk|default:"0" }}</h3>
+        <p style="margin:0">Medium Risk</p>
+    </div>
+    <div style="flex: 1; background: #e8f5e9; padding: 15px; border-radius: 8px; text-align: center;">
+        <h3>{{ low_risk|default:"0" }}</h3>
+        <p style="margin:0">Low Risk</p>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<form method="GET" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input type="text" name="search" class="form-control" placeholder="Search by name or email..." value="{{ request.GET.search }}" style="flex: 2;">
+    <select name="risk" class="form-control" style="flex: 1;">
+        <option value="">All Risks</option>
+        <option value="High" {% if request.GET.risk == 'High' %}selected{% endif %}>High Risk</option>
+        <option value="Medium" {% if request.GET.risk == 'Medium' %}selected{% endif %}>Medium Risk</option>
+        <option value="Low" {% if request.GET.risk == 'Low' %}selected{% endif %}>Low Risk</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<!-- Customers Table -->
+<table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
+    <thead style="background-color: #343a40; color: white;">
+        <tr>
+            <th style="padding: 10px;">Name</th>
+            <th style="padding: 10px;">Email</th>
+            <th style="padding: 10px;">Orders</th>
+            <th style="padding: 10px;">Spent (₹)</th>
+            <th style="padding: 10px;">Risk Level</th>
+            <th style="padding: 10px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td style="padding: 10px;">{{ customer.name }}</td>
+            <td style="padding: 10px;">{{ customer.email }}</td>
+            <td style="padding: 10px; text-align: center;">{{ customer.total_orders }}</td>
+            <td style="padding: 10px; text-align: right;">₹{{ customer.total_spent|floatformat:2 }}</td>
+            <td style="padding: 10px; text-align: center;">
+                {% if customer.risk_level == 'High' %}
+                    <span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">High {{ customer.churn_probability|floatformat:0 }}%</span>
+                {% elif customer.risk_level == 'Medium' %}
+                    <span style="background: #ffc107; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Medium {{ customer.churn_probability|floatformat:0 }}%</span>
+                {% elif customer.risk_level == 'Low' %}
+                    <span style="background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Low {{ customer.churn_probability|floatformat:0 }}%</span>
+                {% else %}
+                    <span style="background: #6c757d; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Pending</span>
+                {% endif %}
+            </td>
+            <td style="padding: 10px; white-space: nowrap;">
+                <a href="{% url 'customers:customer_detail' customer.id %}" class="btn btn-sm btn-info">View</a>
+                <a href="{% url 'customers:edit_customer' customer.id %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'customers:delete_customer' customer.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this customer?')">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="padding: 40px; text-align: center;">No customers found. <a href="{% url 'customers:add_customer' %}">Add your first customer</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+{% if customers.has_other_pages %}
+<div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+    {% if customers.has_previous %}
+        <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">First</a>
+        <a href="?page={{ customers.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Previous</a>
+    {% endif %}
+    
+    <span style="padding: 5px 10px; background: #007bff; color: white; border-radius: 4px;">Page {{ customers.number }} of {{ customers.paginator.num_pages }}</span>
+    
+    {% if customers.has_next %}
+        <a href="?page={{ customers.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Next</a>
+        <a href="?page={{ customers.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Last</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
