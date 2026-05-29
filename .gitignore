@@ -9,3 +9,19 @@ venv/
 
 # Migrations
 */migrations/
+# Python
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3
+*.log
+
+# Virtual environment
+venv/
+
+# Migrations (optional)
+*/migrations/
+
+# VS Code
+.vscode/
