@@ -1,3 +1,8 @@
+# File: customers/urls.py
+
+
+
+# Import section
 from django.urls import path
 from . import views
 

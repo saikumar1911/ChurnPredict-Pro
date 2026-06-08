@@ -1,3 +1,7 @@
+# File: accounts/churn_system/urls.py
+
+
+
 """
 URL configuration for churn_system project.
 
@@ -14,6 +18,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# Root URL configuration for the churn_system project.
+# Import section
 from django.contrib import admin
 from django.urls import path, include
 

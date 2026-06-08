@@ -1,3 +1,7 @@
+# File: predictions/ml_model.py
+
+
+
 """
 ML Model Loader - Loads the Random Forest model trained in Google Colab
 Place your 5 files in the 'ml_model' folder:
@@ -8,10 +12,10 @@ Place your 5 files in the 'ml_model' folder:
 - model_info.json
 """
 
+# Import section
 import joblib
 import json
 import pandas as pd
-import numpy as np
 from pathlib import Path
 import warnings
 warnings.filterwarnings('ignore')
@@ -30,29 +34,33 @@ scaler = None
 feature_columns = []
 encoders = {}
 
+# Function: load_ml_model
 def load_ml_model():
     """Load the trained ML model from Google Colab files"""
     global model, scaler, feature_columns, encoders
     
+    # Try block
     try:
+        # If block
         if MODEL_PATH.exists():
             model = joblib.load(MODEL_PATH)
-            print("✅ ML Model loaded")
+        # If block
         if SCALER_PATH.exists():
             scaler = joblib.load(SCALER_PATH)
-            print("✅ Scaler loaded")
+        # If block
         if FEATURES_PATH.exists():
+            # With block
             with open(FEATURES_PATH, 'r') as f:
                 feature_columns = json.load(f)
-            print(f"✅ Features loaded: {len(feature_columns)}")
+        # If block
         if ENCODERS_PATH.exists():
             encoders = joblib.load(ENCODERS_PATH)
-            print("✅ Encoders loaded")
         return model is not None
-    except Exception as e:
-        print(f"⚠️ Error loading ML files: {e}")
+    # Except block
+    except Exception:
         return False
 
+# Function: predict_single_customer
 def predict_single_customer(customer_data):
     """
     Predict churn for a single customer
@@ -61,26 +69,34 @@ def predict_single_customer(customer_data):
     global model, scaler, feature_columns
     
     # Check if ML model is available
+    # If block
     if model is None:
         loaded = load_ml_model()
+        # If block
         if not loaded:
             # FALLBACK: Rule-based prediction
             return fallback_prediction(customer_data)
     
+    # Try block
     try:
         # Convert to DataFrame
         input_df = pd.DataFrame([customer_data])
         
         # Handle categorical columns if encoders exist
+        # For block
         for col, le in encoders.items():
+            # If block
             if col in input_df.columns:
+                # Try block
                 try:
                     input_df[col] = le.transform(input_df[col])
                 except:
                     input_df[col] = 0
         
         # Ensure all feature columns exist
+        # For block
         for col in feature_columns:
+            # If block
             if col not in input_df.columns:
                 input_df[col] = 0
         
@@ -97,10 +113,11 @@ def predict_single_customer(customer_data):
         
         return int(prediction), float(probability)
         
-    except Exception as e:
-        print(f"Prediction error: {e}")
+    # Except block
+    except Exception:
         return fallback_prediction(customer_data)
 
+# Function: fallback_prediction
 def fallback_prediction(customer_data):
     """Rule-based fallback when ML model is not available"""
     prob = 0.2  # Start with low risk
@@ -109,23 +126,30 @@ def fallback_prediction(customer_data):
     orders = customer_data.get('total_orders', 0)
     complaints = customer_data.get('complaint_count', 0)
     
+    # If block
     if days > 30 and orders < 5:
         prob = 0.85
+    # Elif block
     elif days > 15 and orders < 10:
         prob = 0.55
+    # Elif block
     elif complaints > 2:
         prob = 0.70
+    # Elif block
     elif days > 60:
         prob = 0.90
+    # Elif block
     elif orders > 20:
         prob = 0.15
     
     return 1 if prob > 0.5 else 0, prob
 
+# Function: predict_bulk
 def predict_bulk(customers_queryset):
     """Predict churn for multiple customers"""
     results = []
     
+    # For block
     for customer in customers_queryset:
         customer_dict = {
             'total_orders': customer.total_orders,
@@ -143,10 +167,13 @@ def predict_bulk(customers_queryset):
         
         pred, prob = predict_single_customer(customer_dict)
         
+        # If block
         if prob > 0.7:
             risk = 'High'
+        # Elif block
         elif prob > 0.4:
             risk = 'Medium'
+        # Else block
         else:
             risk = 'Low'
         

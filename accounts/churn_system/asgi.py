@@ -1,3 +1,7 @@
+# File: accounts/churn_system/asgi.py
+
+
+
 """
 ASGI config for churn_system project.
 
@@ -7,10 +11,12 @@ For more information on this file, see
 https://docs.djangoproject.com/en/6.0/howto/deployment/asgi/
 """
 
+# Import section
 import os
 
+# Import section
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'churn_system.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'accounts.churn_system.settings')
 
 application = get_asgi_application()

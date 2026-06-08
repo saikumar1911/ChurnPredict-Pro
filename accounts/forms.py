@@ -1,7 +1,13 @@
+# File: accounts/forms.py
+
+
+
+# Import section
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+# Login form for store managers.
 class LoginForm(forms.Form):
     username = forms.CharField(
         max_length=150,
@@ -23,6 +29,7 @@ class LoginForm(forms.Form):
         )
     )
 
+# Registration form for new store managers.
 class RegisterForm(forms.Form):
     first_name = forms.CharField(
         required=False,
@@ -99,23 +106,29 @@ class RegisterForm(forms.Form):
         )
     )
 
+# Function: clean_username
     def clean_username(self):
         username = self.cleaned_data.get('username')
+        # If block
         if User.objects.filter(username=username).exists():
             raise ValidationError('Username already exists!')
         return username
 
+# Function: clean_email
     def clean_email(self):
         email = self.cleaned_data.get('email')
+        # If block
         if User.objects.filter(email=email).exists():
             raise ValidationError('Email already registered!')
         return email
 
+# Function: clean
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
 
+        # If block
         if password and confirm_password and password != confirm_password:
             raise ValidationError('Passwords do not match!')
 

@@ -1,26 +1,27 @@
-from django.shortcuts import render
+# File: emails/views.py
 
-# Create your views here.
+
+
+# Import section
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings
 import random
 import string
 from customers.models import Customer
 from .models import EmailLog
 
+# Helper to create a unique coupon code for the email.
 def generate_coupon(customer_name, discount):
-    """Generate unique coupon code"""
     prefix = ''.join(random.choices(string.ascii_uppercase, k=3))
     number = random.randint(100, 999)
     return f"{prefix}{discount}{number}"
 
 @login_required
+# Function: email_list
 def email_list(request):
+    """Show the list of emails sent by the current user."""
     emails = EmailLog.objects.filter(sent_by=request.user).select_related('customer')
-    
     context = {
         'emails': emails,
         'total': emails.count(),
@@ -28,19 +29,20 @@ def email_list(request):
     return render(request, 'emails/list.html', context)
 
 @login_required
+# Function: send_email
 def send_email(request, customer_id):
+    """Compose and save a retention email for a customer."""
     customer = get_object_or_404(Customer, id=customer_id, created_by=request.user)
-    
+
+    # If block
     if request.method == 'POST':
         subject = request.POST.get('subject')
         message = request.POST.get('message')
         discount = int(request.POST.get('discount', 20))
-        
-        # Generate coupon
+
         coupon = generate_coupon(customer.name, discount)
-        
-        # Save to database
-        email_log = EmailLog.objects.create(
+
+        EmailLog.objects.create(
             customer=customer,
             sent_by=request.user,
             subject=subject,
@@ -49,32 +51,25 @@ def send_email(request, customer_id):
             discount_percent=discount,
             status='sent'
         )
-        
-        # Send real email (uncomment in production)
-        # send_mail(
-        #     subject,
-        #     f"{message}\n\nYour coupon: {coupon}\nDiscount: {discount}%",
-        #     settings.EMAIL_HOST_USER,
-        #     [customer.email],
-        #     fail_silently=False,
-        # )
-        
-        # Update manager stats
+
         profile = request.user.profile
         profile.total_emails_sent += 1
         profile.save()
-        
+
         messages.success(request, f'Email sent to {customer.name}! Coupon: {coupon}')
         return redirect('customers:customer_detail', customer_id=customer.id)
-    
-    # Default discount based on risk level
+
+    # Default discount based on churn risk.
+    # If block
     if customer.risk_level == 'High':
         default_discount = 25
+    # Elif block
     elif customer.risk_level == 'Medium':
         default_discount = 15
+    # Else block
     else:
         default_discount = 10
-    
+
     return render(request, 'emails/send.html', {
         'customer': customer,
         'default_discount': default_discount

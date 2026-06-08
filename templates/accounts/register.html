@@ -1,5 +1,9 @@
+<!-- Template: templates/accounts/register.html -->
+
+
 {% extends 'base.html' %}
 
+<!-- Content block inserted by child templates -->
 {% block content %}
 <div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 40px 0;">
     <div style="width: 100%; max-width: 900px;">
@@ -88,6 +92,7 @@
 
                     <div style="margin-bottom: 12px;">
                         {{ form.username }}
+<!-- Conditional rendering -->
                         {% if form.username.errors %}
                             <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
                                 {{ form.username.errors|striptags }}
@@ -97,6 +102,7 @@
 
                     <div style="margin-bottom: 12px;">
                         {{ form.email }}
+<!-- Conditional rendering -->
                         {% if form.email.errors %}
                             <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
                                 {{ form.email.errors|striptags }}
@@ -114,6 +120,7 @@
 
                     <div style="margin-bottom: 12px;">
                         {{ form.password }}
+<!-- Conditional rendering -->
                         {% if form.password.errors %}
                             <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
                                 {{ form.password.errors|striptags }}
@@ -123,6 +130,7 @@
 
                     <div style="margin-bottom: 20px;">
                         {{ form.confirm_password }}
+<!-- Conditional rendering -->
                         {% if form.confirm_password.errors %}
                             <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
                                 {{ form.confirm_password.errors|striptags }}

@@ -1,3 +1,6 @@
+<!-- Template: templates/base.html -->
+
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -8,13 +11,17 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Chart.js -->
+<!-- Client-side page scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+<!-- Conditional rendering -->
     {% if user.is_authenticated %}
+<!-- Navigation section -->
     <nav class="navbar">
+<!-- Main container for page content -->
         <div class="container">
             <a class="navbar-brand" href="/dashboard/">
                 <i class="fas fa-chart-line"></i> ChurnPredict Pro
@@ -32,8 +39,11 @@
     </nav>
     {% endif %}
     
+<!-- Main container for page content -->
     <div class="container">
+<!-- Display flash messages -->
         {% if messages %}
+<!-- Loop through items -->
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">
                     <span><i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i> {{ message }}</span>
@@ -42,13 +52,16 @@
             {% endfor %}
         {% endif %}
         
+<!-- Content block inserted by child templates -->
         {% block content %}{% endblock %}
     </div>
     
+<!-- Footer section -->
     <div class="footer">
         <p><i class="fas fa-chart-line"></i> ChurnPredict Pro | Customer Churn Prediction System | Powered by Random Forest ML</p>
     </div>
     
+<!-- Client-side page scripts -->
     <script>
         // Auto-dismiss alerts after 5 seconds
         setTimeout(function() {

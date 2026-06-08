@@ -1,5 +1,9 @@
+<!-- Template: templates/customers/list.html -->
+
+
 {% extends 'base.html' %}
 
+<!-- Content block inserted by child templates -->
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h2><i class="fas fa-users"></i> Customers</h2>
@@ -55,6 +59,7 @@
         </tr>
     </thead>
     <tbody>
+<!-- Loop through items -->
         {% for customer in customers %}
         <tr>
             <td style="padding: 10px;">{{ customer.name }}</td>
@@ -62,12 +67,16 @@
             <td style="padding: 10px; text-align: center;">{{ customer.total_orders }}</td>
             <td style="padding: 10px; text-align: right;">₹{{ customer.total_spent|floatformat:2 }}</td>
             <td style="padding: 10px; text-align: center;">
+<!-- Conditional rendering -->
                 {% if customer.risk_level == 'High' %}
                     <span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">High {{ customer.churn_probability|floatformat:0 }}%</span>
+<!-- Conditional rendering -->
                 {% elif customer.risk_level == 'Medium' %}
                     <span style="background: #ffc107; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Medium {{ customer.churn_probability|floatformat:0 }}%</span>
+<!-- Conditional rendering -->
                 {% elif customer.risk_level == 'Low' %}
                     <span style="background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Low {{ customer.churn_probability|floatformat:0 }}%</span>
+<!-- Conditional rendering -->
                 {% else %}
                     <span style="background: #6c757d; color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px;">Pending</span>
                 {% endif %}
@@ -87,8 +96,10 @@
 </table>
 
 <!-- Pagination -->
+<!-- Conditional rendering -->
 {% if customers.has_other_pages %}
 <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+<!-- Conditional rendering -->
     {% if customers.has_previous %}
         <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">First</a>
         <a href="?page={{ customers.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Previous</a>
@@ -96,6 +107,7 @@
     
     <span style="padding: 5px 10px; background: #007bff; color: white; border-radius: 4px;">Page {{ customers.number }} of {{ customers.paginator.num_pages }}</span>
     
+<!-- Conditional rendering -->
     {% if customers.has_next %}
         <a href="?page={{ customers.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Next</a>
         <a href="?page={{ customers.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.risk %}&risk={{ request.GET.risk }}{% endif %}" class="btn btn-secondary btn-sm">Last</a>

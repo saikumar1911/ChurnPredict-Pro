@@ -1,3 +1,6 @@
-from django.db import models
+# File: dashboard/models.py
 
-# Create your models here.
+
+
+# Dashboard app does not define custom models.
+# It uses models from other apps for reporting and view logic.

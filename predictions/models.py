@@ -1,3 +1,6 @@
-from django.db import models
+# File: predictions/models.py
 
-# Create your models here.
+
+
+# Predictions app does not require its own database models.
+# It uses shared customer data and ML helpers instead.

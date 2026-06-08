@@ -1,3 +1,8 @@
+# File: predictions/admin.py
+
+
+
+# Import section
 from django.contrib import admin
 
-# Register your models here.
+# Predictions admin stub. No models registered for this app.

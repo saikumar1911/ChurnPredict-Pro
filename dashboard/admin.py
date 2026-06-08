@@ -1,3 +1,8 @@
+# File: dashboard/admin.py
+
+
+
+# Import section
 from django.contrib import admin
 
-# Register your models here.
+# Dashboard admin stub. No models are registered here yet.

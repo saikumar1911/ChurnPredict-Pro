@@ -1,8 +1,14 @@
+# File: accounts/churn_system/settings.py
 
+
+
+
+# Django settings for the churn_system project.
+# Import section
 from pathlib import Path
 import os
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = 'django-insecure-customer-churn-system-2024-project'
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -31,7 +37,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'churn_system.urls'
+ROOT_URLCONF = 'accounts.churn_system.urls'
 
 TEMPLATES = [
     {
@@ -49,7 +55,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'churn_system.wsgi.application'
+WSGI_APPLICATION = 'accounts.churn_system.wsgi.application'
 
 DATABASES = {
     'default': {
