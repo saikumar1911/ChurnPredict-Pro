@@ -69,10 +69,9 @@ class RegisterForm(forms.Form):
         )
     )
     store_name = forms.CharField(
-        required=False,
         widget=forms.TextInput(
             attrs={
-                'placeholder': 'Store Name (optional)',
+                'placeholder': 'Store Name *',
                 'style': 'width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 13px;',
             }
         )

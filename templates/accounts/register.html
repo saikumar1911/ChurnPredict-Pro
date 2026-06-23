@@ -112,6 +112,11 @@
 
                     <div style="margin-bottom: 12px;">
                         {{ form.store_name }}
+                        {% if form.store_name.errors %}
+                            <div style="color: #721c24; font-size: 12px; margin-top: 5px;">
+                                {{ form.store_name.errors|striptags }}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div style="display: flex; gap: 10px; margin-bottom: 12px;">
